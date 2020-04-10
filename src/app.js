@@ -34,7 +34,7 @@ app.use(session({
   key:'weibo.sid', //cookie name  默认是koa.sid
   prefix:'weibeo:sess:', //redis key 的前缀，默认是 `koa:sess:`
   cookie:{
-    path:"/",
+    path:'/',
     httpOnly:true,  //只允许服务端修改
     maxAge:24*60*60*1000 //ms 过期时间1天
   },
@@ -58,6 +58,6 @@ app.use(users.routes(), users.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
-});
+})
 
 module.exports = app
