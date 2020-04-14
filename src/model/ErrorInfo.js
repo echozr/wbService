@@ -26,7 +26,7 @@ module.exports = {
   // 未登录
   loginCheckFailInfo: {
     errno: 10005,
-    message: '您尚未登录'
+    message: '用户未登录'
   },
   // 修改密码失败
   changePasswordFailInfo: {

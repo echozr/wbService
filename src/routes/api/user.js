@@ -8,6 +8,7 @@ const { isExist, register, login } = require('../../controller/user')
 const userValidate = require('../../validator/user')
 const { genValidator } = require('../../middlewares/validate')
 
+
 router.prefix('/api/user')
 
 // 注册
@@ -24,10 +25,10 @@ router.post('/isExist', async (ctx, next) => {
 })
 
 // 登录
-router.post('/login', async (ctx, next) => {
+router.post('/login',async (ctx, next) => {
   const { userName, password } = ctx.request.query
   // 调用controller 
-  ctx.body = await login({ctx, userName, password})
+  ctx.body = await login({ ctx, userName, password })
 })
 
 module.exports = router
