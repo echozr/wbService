@@ -10,7 +10,7 @@ const redisStore=require('koa-redis')
 const {RedisConfig}=require('./config/db')
 // 路由
 const index = require('./routes/index')
-const users = require('./routes/users')
+const userApi = require('./routes/api/user')
 // error handler
 onerror(app)
 // middlewares
@@ -49,7 +49,7 @@ app.use(session({
 
 // routes 注册
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(userApi.routes(), userApi.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
