@@ -5,8 +5,12 @@
 
 const { getUserInfo, createUser } = require('../services/user')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
-const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo } = require('../model/ErrorInfo')
-const doCrypto= require('../utils/cryp')
+const {
+  registerUserNameNotExistInfo,
+  registerUserNameExistInfo,
+  registerFailInfo,
+  loginFailInfo } = require('../model/ErrorInfo')
+const doCrypto = require('../utils/cryp')
 /**
  * 用户名是否存在
  * @param {string} userName   用户名
@@ -39,7 +43,7 @@ async function register({ userName, password, gender }) {
   }
   //实现注册功能  调用services
   try {
-    await createUser({ userName, password:doCrypto(password), gender })
+    await createUser({ userName, password: doCrypto(password), gender })
     return new SuccessModel('恭喜你，注册成功！')
   } catch (ex) {
     console.error(ex.message, ex.stack)
@@ -47,7 +51,27 @@ async function register({ userName, password, gender }) {
   }
 }
 
+/**
+ * 用户登录
+ * @param {object} ctx  koa2 ctx
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ */
+async function login({ctx, userName, password}) {
+  //获取用户信息
+  const userInfo = await getUserInfo(userName, doCrypto(password))
+  // 获取用户信息失败，登录失败
+  if (!userInfo) {
+    return new ErrorModel(loginFailInfo)
+  }
+  // 登录成功后，ctx.session.userInfo赋值
+  ctx.session.userInfo = userInfo
+  return new SuccessModel('恭喜你，登录成功！')
+
+}
+
 module.exports = {
   isExist,
-  register
+  register,
+  login
 }
