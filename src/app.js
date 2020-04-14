@@ -8,12 +8,13 @@ const logger = require('koa-logger')
 const session =require('koa-generic-session')
 const redisStore=require('koa-redis')
 const {RedisConfig}=require('./config/db')
+const {SESSION_KEY}=require('./config/constant') //session 秘钥
 // 路由
 const index = require('./routes/index')
 const userApi = require('./routes/api/user')
 // error handler
 onerror(app)
-// middlewares
+// middlewares 中间件
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
@@ -24,7 +25,7 @@ app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
 //session 配置 
-app.keys=['ZRa_$?SuanHeng']
+app.keys=[SESSION_KEY]
 app.proxy
 app.use(session({
   key:'weibo.sid', //cookie name  默认是koa.sid
