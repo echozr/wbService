@@ -24,7 +24,7 @@ class BaseModel {
 class SuccessModel extends BaseModel {
   constructor(data = {}) {
     super({
-      errno: 0,
+      errno: 200,
       data
     })
   }

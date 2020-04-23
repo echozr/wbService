@@ -7,6 +7,7 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const session =require('koa-generic-session')
 const redisStore=require('koa-redis')
+// const cors = require('koa2-cors') // 跨域配置
 const {RedisConfig}=require('./config/db')
 const {SESSION_KEY}=require('./config/constant') //session 秘钥
 // 路由
@@ -18,6 +19,19 @@ onerror(app)
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
+
+// 跨域配置
+// app.use(async (ctx, next)=> {
+//   ctx.set('Access-Control-Allow-Origin', '*')
+//   ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild')
+//   ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS')
+//   if (ctx.method == 'OPTIONS') {
+//     ctx.body = 200
+//   } else {
+//     await next()
+//   }
+// })
+
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))

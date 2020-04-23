@@ -22,7 +22,6 @@ function _md5(content) {
 
 function doCrypto(content) {
   const str = `password=${content}&key=${CRYPTO_KEY}`
-  console.log(str)
   return _md5(str)
 }
 
