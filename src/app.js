@@ -7,6 +7,7 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const session =require('koa-generic-session')
 const redisStore=require('koa-redis')
+// const koaBody = require('koa-body')
 // const cors = require('koa2-cors') // 跨域配置
 const {RedisConfig}=require('./config/db')
 const {SESSION_KEY}=require('./config/constant') //session 秘钥
@@ -19,6 +20,10 @@ onerror(app)
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
+// koa post 从body中获取参数
+// app.use(koaBody({
+//   multipart: true,  // 允许上传多个文件
+// }))
 
 // 跨域配置
 // app.use(async (ctx, next)=> {
