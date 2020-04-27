@@ -5,7 +5,7 @@
 const path = require('path')
 const fse = require('fs-extra')
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
-const { uploadFileSizeFailInfo } = require('../model/ErrorInfo')
+const errorInfo = require('../model/ErrorInfo')
 
 // 文件最大体积
 const MIX_SIZE = 1024 * 1024 * 1024 //  1M
@@ -35,7 +35,7 @@ async function saveFile(ctx,{ name, type, size, filePath }) {
   if (size > MIX_SIZE) {
     //删掉文件 防治占用系统资源大小
     await fse.remove(filePath)
-    return ErrorModel(uploadFileSizeFailInfo)
+    return ErrorModel(errorInfo.uploadFileSizeFailInfo)
   }
   // 移动文件到指定的目录下
   const fileName = Date.now() + '.' + name //防止重名，名称前加随机时间戳

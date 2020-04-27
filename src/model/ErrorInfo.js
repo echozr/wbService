@@ -2,7 +2,7 @@
  * @description  失败信息结合 包括 code 和 message
  * @author zr
  */
-module.exports = {
+const errorInfo={
   // 用户名已存在
   registerUserNameExistInfo: {
     code: 10001,
@@ -74,3 +74,4 @@ module.exports = {
     message: '删除微博失败，请重试'
   }
 }
+module.exports = errorInfo

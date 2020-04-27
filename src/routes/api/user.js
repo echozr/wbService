@@ -4,9 +4,10 @@
  */
 
 const router = require('koa-router')()
-const { isExist, register, login } = require('../../controller/user')
+const { isExist, register, login, changeInfo, changePassword, logout } = require('../../controller/user')
 const userValidate = require('../../validator/user')
 const { genValidator } = require('../../middlewares/validate')
+const loginCheck = require('../../middlewares/loginCheck')
 
 
 router.prefix('/user')
@@ -23,12 +24,30 @@ router.post('/isExist', async (ctx, next) => {
   //调用controller
   ctx.body = await isExist(userName)
 })
-
 // 登录
 router.post('/login', async (ctx, next) => {
   const { userName, password } = ctx.request.body
   // 调用controller 
   ctx.body = await login({ ctx, userName, password })
+})
+
+// 修改用户信息
+router.post('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
+  const { nickName, city, picture } = ctx.request.body
+  // 调用controller
+  ctx.body = await changeInfo({ ctx, nickName, city, picture })
+})
+
+// 修改密码
+router.post('/changePassword', loginCheck, genValidator(userValidate), async (ctx, next) => {
+  const { password, newPassword } = ctx.request.body
+  // 调用controller
+  ctx.body = await changePassword({ ctx, password, newPassword })
+})
+
+// 退出登录
+router.post('/logout', loginCheck, async (ctx, next) => {
+  ctx.body = await logout(ctx)
 })
 
 module.exports = router

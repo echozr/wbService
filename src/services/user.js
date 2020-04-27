@@ -5,6 +5,7 @@
 
 const { User } = require('../db/models/index')
 const { formatUser } = require('./_format')
+const user = require('../controller/user')
 
 /**
  * 获取用户信息
@@ -51,7 +52,36 @@ async function createUser({ userName, password, gender = 3, nickname }) {
   return result.dataValues
 }
 
+/**
+ * 修改用户信息
+ * @param {object} param0   修改的内容 {newPassword,newNickName,newCity,newPicture}
+ * @param {object} param1   查询的内容 {userName,password}
+ */
+
+async function updateUser({ newPassword, newNickName, newCity, newPicture }, { userName, password }) {
+  debugger
+  //拼接修改内容
+  const changeData = {}
+  newPassword ? changeData.password = newPassword : ''
+  newNickName ? changeData.nickname = newNickName : ''
+  newCity ? changeData.city = newCity : ''
+  newPicture ? changeData.picture = newPicture : ''
+  //拼接查询条件
+  const whereData = {
+    userName
+  }
+  password ? whereData.password = password : ''
+
+  //执行数据库操作
+  const result = await User.update(changeData, {
+    where: whereData
+  })
+  console.log(result)
+  return result[0] > 0 // 表示 执行操作成功的行数 大于1
+}
+
 module.exports = {
   getUserInfo,
-  createUser
+  createUser,
+  updateUser
 }
