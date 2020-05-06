@@ -23,7 +23,7 @@ async function getUserInfo(userName, password) {
   }
   // 查询
   const result = await User.findOne({
-    attributes: ['id', 'userName', 'nickname', 'picture', 'city'],
+    attributes: ['id', 'userName', 'nickname', 'picture', 'city', 'gender'],
     where: whereOpt
   })
   if (result === null) {
@@ -58,7 +58,7 @@ async function createUser({ userName, password, gender = 3, nickname }) {
  * @param {object} param1   查询的内容 {userName,password}
  */
 
-async function updateUser({ newPassword, newNickName, newCity, newPicture }, { userName, password }) {
+async function updateUser({ newPassword, newNickName, newCity, newPicture, newGender }, { userName, password }) {
   debugger
   //拼接修改内容
   const changeData = {}
@@ -66,6 +66,7 @@ async function updateUser({ newPassword, newNickName, newCity, newPicture }, { u
   newNickName ? changeData.nickname = newNickName : ''
   newCity ? changeData.city = newCity : ''
   newPicture ? changeData.picture = newPicture : ''
+  newGender ? changeData.gender = newGender : ''
   //拼接查询条件
   const whereData = {
     userName

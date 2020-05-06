@@ -33,9 +33,10 @@ router.post('/login', async (ctx, next) => {
 
 // 修改用户信息
 router.post('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
-  const { nickName, city, picture } = ctx.request.body
+  const { nickname, city, picture, gender } = ctx.request.body
   // 调用controller
-  ctx.body = await changeInfo({ ctx, nickName, city, picture })
+  debugger
+  ctx.body = await changeInfo({ ctx, nickname, city, picture,gender })
 })
 
 // 修改密码

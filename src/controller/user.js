@@ -55,6 +55,7 @@ async function register({ userName, password, gender }) {
  */
 async function login({ ctx, userName, password }) {
   //获取用户信息
+
   const userInfo = await getUserInfo(userName, doCrypto(password))
   // 获取用户信息失败，登录失败
   if (!userInfo) {
@@ -62,38 +63,42 @@ async function login({ ctx, userName, password }) {
   }
   // 登录成功后，ctx.session.userInfo赋值
   ctx.session.userInfo = userInfo
-  return new SuccessModel('恭喜你，登录成功！')
-
+  return new SuccessModel({
+    userInfo
+  })
 }
 
 /**
  * 修改用户信息
  * @param {object} ctx  ctx
- * @param {string} nickName  昵称
+ * @param {string} nickname  昵称
  * @param {string} city  城市
  * @param {string} picture  头像
+ * @param {string} gender 性别
  * 
  */
-async function changeInfo({ ctx, nickName, city, picture }) {
+async function changeInfo({ ctx, nickname, city, picture,gender }) {
   // 从session中获取用户信息
   const { userName } = ctx.session.userInfo
   // 如果昵称为空 将userName 赋值给nickName
-  if (!nickName) {
-    nickName = userName
+  if (!nickname) {
+    nickname = userName
   }
   // 调用services
   const result = await updateUser({
-    newNickName: nickName,
+    newNickName: nickname,
     newCity: city,
-    newPicture: picture
+    newPicture: picture,
+    newGender:gender
   }, { userName })
   // 执行成功
   if (result) {
     // 更新session 中存储的数据
     Object.assign(ctx.session.userInfo, {
-      nickName,
+      nickname,
       city,
-      picture
+      picture,
+      gender
     })
     return new SuccessModel('恭喜你，修改信息成功！')
   }
