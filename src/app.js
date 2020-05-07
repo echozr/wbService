@@ -16,6 +16,7 @@ const { SESSION_KEY } = require('./config/constant') //session 秘钥
 const index = require('./routes/index')
 const userApi = require('./routes/api/user')
 const utilsApi = require('./routes/api/utils')
+const blogApi = require('./routes/api/blog')
 // error handler
 onerror(app)
 // middlewares 中间件
@@ -69,6 +70,7 @@ console.log(koaStatic)
 app.use(index.routes(), index.allowedMethods())
 app.use(userApi.routes(), userApi.allowedMethods())
 app.use(utilsApi.routes(), utilsApi.allowedMethods())
+app.use(blogApi.routes(),blogApi.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

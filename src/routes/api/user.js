@@ -36,7 +36,7 @@ router.post('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, n
   const { nickname, city, picture, gender } = ctx.request.body
   // 调用controller
   debugger
-  ctx.body = await changeInfo({ ctx, nickname, city, picture,gender })
+  ctx.body = await changeInfo({ ctx, nickname, city, picture, gender })
 })
 
 // 修改密码

@@ -29,7 +29,7 @@ const user=seq.define('user',{
     defaultValue:3, //默认值
     comment:'性别(1:男性、2：女性、3：保密'
   },
-  picture:{
+  picture:{ 
     type:STRING,
     comment:'头像存图片地址'
   },

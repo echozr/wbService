@@ -15,9 +15,7 @@ const options = {
   keepExtensions: true
 }
 router.post('/upload', loginCheck,koaForm(options), async (ctx, next) => {
-  debugger
   const File =  ctx.req.files.file
-  debugger
   const { size, path, name, type } = File
   // 调用controller
   ctx.body = await saveFile(ctx,{
