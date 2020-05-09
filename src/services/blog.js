@@ -4,6 +4,7 @@
  */
 
 const { Blog, BlogUpload, User } = require('../db/models/index')
+const { formatUser } = require('./_format.js')
 /**
  * 创建微博
  * @param {string} content 微博内容
@@ -69,26 +70,35 @@ async function getList({ userName, pagesize, pageIndex }) {
     order: [
       ['id', 'desc']
     ],
-    distinct:true,  //去重
+    distinct: true,  //去重
     include: [
       {
         model: User,
         attributes: ['userName', 'nickname', 'picture'],
         where: whereOpts,
-        required:false,
+        required: false,
       },
       {
         model: BlogUpload,
         attributes: ['image'],
-        required:false,
+        required: false,
       }
     ]
   })
   // 处理返回数据格式
-  console.log(result.rows)
+  const blogList = result.rows.map(item => item.dataValues)
+  const list = blogList.map(blogItem => {
+    const user = blogItem.user.dataValues
+    const blogUploads = blogItem.blogUploads.map(v => v.dataValues)
+    blogItem.user = formatUser(user)
+    blogItem.blogUploads = blogUploads
+    return blogItem
+  })
+
+  // 返回数据
   return {
     count: result.count,
-    blogList: result.rows
+    blogList: blogList
   }
 }
 
