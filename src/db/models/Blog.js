@@ -3,7 +3,7 @@
  * @author zr
  */
 const seq=require('../seq')
-const {STRING,INTEGER,TEXT} =require('../type')
+const {INTEGER,TEXT} =require('../type')
 
 const Blog=seq.define('blog',{
   userId:{

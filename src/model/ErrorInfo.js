@@ -72,6 +72,11 @@ const errorInfo={
   deleteBlogFailInfo: {
     code: 11002,
     message: '删除微博失败，请重试'
+  },
+  // 获取微博列表失败
+  getBlogListFailInfo:{
+    code: 13001,
+    message: '获取微博列表失败，请重试'
   }
 }
 module.exports = errorInfo

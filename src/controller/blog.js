@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { creatBlog } = require('../services/blog')
+const { creatBlog, getList } = require('../services/blog')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const errorInfo = require('../model/ErrorInfo')
 const xss = require('xss')
@@ -16,15 +16,14 @@ const xss = require('xss')
  */
 async function creatBlogs({ content, image, ctx }) {
   const { id: userId } = ctx.session.userInfo
-  const NewImage=!image?[]:image
+  const NewImage = !image ? [] : image
   // 创建微博
-  debugger
   try {
     // 创建微博
     const blog = await creatBlog({
       userId,
       content: xss(content),
-      image:NewImage
+      image: NewImage
     })
     return new SuccessModel(blog)
 
@@ -32,10 +31,26 @@ async function creatBlogs({ content, image, ctx }) {
     console.log(ex.message, ex.stack)
     return new ErrorModel(errorInfo.createBlogFailInfo)
   }
+}
 
+/**
+ * 获取微博列表
+ * @param {string} userName  用户名
+ * @param {number} pagesize  每页多少条
+ * @param {number} pageIndex  第几页
+ * 
+ */
+async function getBlogList({ userName, pagesize, pageIndex }) {
+  const result = await getList({ userName, pagesize, pageIndex })
+  if(result){
+    return new SuccessModel(result)
+  }else {
+    return new ErrorModel(errorInfo.getBlogListFailInfo)
+  }
 
 }
 
 module.exports = {
-  creatBlogs
+  creatBlogs,
+  getBlogList
 }
