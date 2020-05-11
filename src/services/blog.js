@@ -82,13 +82,11 @@ async function getList({ userName, pagesize, pageIndex }) {
   const blogList = result.rows.map(item => item.dataValues)
   const list = blogList.map(blogItem => {
     const user = blogItem.user.dataValues
-    const blogUploads = blogItem.blogUploads.map(v => v.dataValues)
+    const blogUploads = blogItem.blogUploads.map(v => v.dataValues.image)
     blogItem.user = formatUser(user)
     blogItem.blogUploads = blogUploads
     return blogItem
   })
-  console.log(list)
-
   // 返回数据
   return {
     count: result.count,
