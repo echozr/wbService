@@ -55,13 +55,6 @@ async function getList({ userName, pagesize, pageIndex }) {
   if (userName) {
     whereOpts.userName = userName
   }
-  if (!pagesize) {
-    pagesize = 10
-  }
-  if (!pageIndex) {
-    pageIndex = 0
-  }
-
   // 执行查询
   const result = await Blog.findAndCountAll({
     attributes: ['id', 'content'],
@@ -94,11 +87,14 @@ async function getList({ userName, pagesize, pageIndex }) {
     blogItem.blogUploads = blogUploads
     return blogItem
   })
+  console.log(list)
 
   // 返回数据
   return {
     count: result.count,
-    blogList: blogList
+    blogList: list,
+    pagesize,
+    pageIndex
   }
 }
 
