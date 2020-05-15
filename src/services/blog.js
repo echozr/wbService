@@ -49,7 +49,8 @@ async function creatBlog({ content, image, userId }) {
 
 async function getList({ userName, pagesize, pageIndex }) {
   // 拼接查询条件
-  debugger
+  const pagesize1=Number(pagesize)
+  const pageIndex1=Number(pageIndex)
   const whereOpts = {
   }
   if (userName) {
@@ -58,8 +59,8 @@ async function getList({ userName, pagesize, pageIndex }) {
   // 执行查询
   const result = await Blog.findAndCountAll({
     attributes: ['id', 'content'],
-    limit: pagesize,
-    offset: pageIndex * pagesize,
+    limit: pagesize1,
+    offset: pageIndex1 * pagesize1,
     order: [
       ['id', 'desc']
     ],
@@ -67,7 +68,7 @@ async function getList({ userName, pagesize, pageIndex }) {
     include: [
       {
         model: User,
-        attributes: ['userName', 'nickname', 'picture'],
+        attributes: ['userName', 'nickname', 'picture','city'],
         where: whereOpts,
         required: false,
       },
