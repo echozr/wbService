@@ -12,7 +12,7 @@ const { formatUser } = require('./_format.js')
  * @param {Array} image 图片附件
  */
 
-async function creatBlog({ content, image, userId }) {
+async function creatBlog({ content, image, userId, ctx }) {
   // 插入微博
   const result = await Blog.create({
     content,
@@ -30,11 +30,20 @@ async function creatBlog({ content, image, userId }) {
       blogImages.push(item)
     }
     const result1 = await BlogUpload.bulkCreate(blogImages)
-    if (result1.length > 1) {
-      Object.assign(blog, { image })
+    if (result1.length > 0) {
+      const imageArr=result1.map(v=>{
+        return v.dataValues.image
+      })
+      Object.assign(blog, { image:imageArr })
     }
   } else {
     Object.assign(blog, { image: [] })
+  }
+  blog.user = {
+    city: ctx.session.userInfo.city,
+    nickname: ctx.session.userInfo.nickname,
+    picture: ctx.session.userInfo.picture,
+    userName: ctx.session.userInfo.userName
   }
   return blog
 }
@@ -49,8 +58,8 @@ async function creatBlog({ content, image, userId }) {
 
 async function getList({ userName, pagesize, pageIndex }) {
   // 拼接查询条件
-  const pagesize1=Number(pagesize)
-  const pageIndex1=Number(pageIndex)
+  const pagesize1 = Number(pagesize)
+  const pageIndex1 = Number(pageIndex)
   const whereOpts = {
   }
   if (userName) {
@@ -68,7 +77,7 @@ async function getList({ userName, pagesize, pageIndex }) {
     include: [
       {
         model: User,
-        attributes: ['userName', 'nickname', 'picture','city'],
+        attributes: ['userName', 'nickname', 'picture', 'city'],
         where: whereOpts,
         required: false,
       },

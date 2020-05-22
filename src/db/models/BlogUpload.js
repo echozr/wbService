@@ -3,7 +3,7 @@
  * @author zr
  */
 const seq = require('../seq')
-const { STRING, INTEGER } = require('../type')
+const { TEXT, INTEGER } = require('../type')
 
 const BlogUpload = seq.define('blogUpload', {
   blogId: {
@@ -12,7 +12,7 @@ const BlogUpload = seq.define('blogUpload', {
     comment: '博客ID'
   },
   image: {
-    type: STRING,
+    type: TEXT,
     comment: '博客图片'
   }
 

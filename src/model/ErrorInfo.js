@@ -77,6 +77,11 @@ const errorInfo={
   getBlogListFailInfo:{
     code: 13001,
     message: '获取微博列表失败，请重试'
+  },
+  // 微博内容不能为空
+  BlogContentFailInfo:{
+    code: 13002,
+    message: '微博内容不能为空'
   }
 }
 module.exports = errorInfo

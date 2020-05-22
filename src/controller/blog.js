@@ -18,20 +18,24 @@ const xss = require('xss')
 async function creatBlogs({ content, image, ctx }) {
   const { id: userId } = ctx.session.userInfo
   const NewImage = !image ? [] : image
-  // 创建微博
-  try {
-    // 创建微博 调用services
-    const blog = await creatBlog({
-      userId,
-      content: xss(content),
-      image: NewImage
-    })
-    return new SuccessModel(blog)
+  if (content) {
+    // 创建微博
+    try {
+      // 创建微博 调用services
+      const blog = await creatBlog({
+        userId,
+        content: xss(content),
+        image: NewImage,
+        ctx
+      })
+      return new SuccessModel(blog)
 
-  } catch (ex) {
-    console.log(ex.message, ex.stack)
-    return new ErrorModel(errorInfo.createBlogFailInfo)
+    } catch (ex) {
+      console.log(ex.message, ex.stack)
+      return new ErrorModel(errorInfo.createBlogFailInfo)
+    }
   }
+  return new ErrorModel(errorInfo.BlogContentFailInfo)
 }
 
 /**
