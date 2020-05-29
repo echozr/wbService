@@ -3,22 +3,35 @@
  * @author zr
  */
 
-const User=require('./User')
-const Blog=require('./Blog')
-const BlogUpload=require('./BlogUpload')
+const User = require('./User')
+const Blog = require('./Blog')
+const BlogUpload = require('./BlogUpload')
+const UserRelation = require('./UserRelation')
 
 // 外键关系
 
-Blog.belongsTo(User,{
-  foreignKey:'userId'
+//博客-属于用户
+Blog.belongsTo(User, {
+  foreignKey: 'userId'
 })
 
-Blog.hasMany(BlogUpload,{
-  foreignKey:'blogId'
+//博客有多张图片
+Blog.hasMany(BlogUpload, {
+  foreignKey: 'blogId'
 })
 
-module.exports={
+//被关注入--可以查询到关注他的用户
+UserRelation.belongsTo(User, {
+  foreignKey: 'followerId'
+})
+
+User.hasMany(UserRelation, {
+  foreignKey: 'userId'
+})
+
+module.exports = {
   User,
   Blog,
-  BlogUpload
+  BlogUpload,
+  UserRelation
 }

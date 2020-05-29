@@ -30,7 +30,6 @@ router.post('/login', async (ctx, next) => {
   // 调用controller 
   ctx.body = await login({ ctx, userName, password })
 })
-
 // 修改用户信息
 router.post('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
   const { nickname, city, picture, gender } = ctx.request.body
@@ -38,14 +37,12 @@ router.post('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, n
   debugger
   ctx.body = await changeInfo({ ctx, nickname, city, picture, gender })
 })
-
 // 修改密码
 router.post('/changePassword', loginCheck, genValidator(userValidate), async (ctx, next) => {
   const { password, newPassword } = ctx.request.body
   // 调用controller
   ctx.body = await changePassword({ ctx, password, newPassword })
 })
-
 // 退出登录
 router.post('/logout', loginCheck, async (ctx, next) => {
   ctx.body = await logout(ctx)

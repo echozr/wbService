@@ -13,10 +13,10 @@ const koaStatic = require('koa-static')
 const { RedisConfig } = require('./config/db')
 const { SESSION_KEY } = require('./config/constant') //session 秘钥
 // 路由
-const index = require('./routes/index')
 const userApi = require('./routes/api/user')
 const utilsApi = require('./routes/api/utils')
 const blogApi = require('./routes/api/blog')
+const followApi = require('./routes/api/follow')
 // error handler
 onerror(app)
 // middlewares 中间件
@@ -37,7 +37,7 @@ app.use(bodyparser({
 app.use(json())
 app.use(logger())
 app.use(koaStatic(__dirname + '/public'))
-app.use(koaStatic(path.join(__dirname,'..','uploadFiles')))
+app.use(koaStatic(path.join(__dirname, '..', 'uploadFiles')))
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
@@ -67,10 +67,10 @@ console.log(koaStatic)
 // })
 
 // routes 注册
-app.use(index.routes(), index.allowedMethods())
 app.use(userApi.routes(), userApi.allowedMethods())
 app.use(utilsApi.routes(), utilsApi.allowedMethods())
-app.use(blogApi.routes(),blogApi.allowedMethods())
+app.use(blogApi.routes(), blogApi.allowedMethods())
+app.use(followApi.routes(), blogApi.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

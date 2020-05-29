@@ -82,6 +82,23 @@ const errorInfo={
   BlogContentFailInfo:{
     code: 13002,
     message: '微博内容不能为空'
+  },
+  // 是否是关注关系
+  isFollowFailInfo:{
+    code:20001,
+    message:'未关注'
+  },
+  unFollowFailInfo:{
+    code:20002,
+    message:'取关失败'
+  },
+  getFollowerByUserIdFailInfo:{
+    code:20003,
+    message:'获取关注列表失败'
+  },
+  getFansByFollowerIdFailInfo:{
+    code:20003,
+    message:'获取粉丝列表失败'
   }
 }
 module.exports = errorInfo
