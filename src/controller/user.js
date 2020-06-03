@@ -77,7 +77,7 @@ async function login({ ctx, userName, password }) {
  * @param {string} gender 性别
  * 
  */
-async function changeInfo({ ctx, nickname, city, picture,gender }) {
+async function changeInfo({ ctx, nickname, city, picture, gender }) {
   // 从session中获取用户信息
   const { userName } = ctx.session.userInfo
   // 如果昵称为空 将userName 赋值给nickName
@@ -89,7 +89,7 @@ async function changeInfo({ ctx, nickname, city, picture,gender }) {
     newNickName: nickname,
     newCity: city,
     newPicture: picture,
-    newGender:gender
+    newGender: gender
   }, { userName })
   // 执行成功
   if (result) {
@@ -124,6 +124,22 @@ async function changePassword({ ctx, password, newPassword }) {
   return new ErrorModel(errorInfo.changePasswordFailInfo)
 }
 
+
+/**
+ * 根据用户名获用户信息
+ * @param {string} userName 
+ */
+async function getUser(userName) {
+  debugger
+  const result = await getUserInfo(userName)
+  if(result){
+    return new SuccessModel(result)
+  }
+  return new ErrorModel(errorInfo.getUserInfoFailInfo)
+}
+
+
+
 /**
  * 退出用户登录
  * @param {object} ctx  ctx
@@ -139,5 +155,6 @@ module.exports = {
   login,
   changeInfo,
   changePassword,
+  getUser,
   logout
 }

@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { findFollowRelation, createFollow, deleteFollow, getFollowerByUserId, getFansByFollowerId } = require('../services/follow')
+const { findFollowRelation, createFollow, deleteFollow, getFollowerByUserId, getFansByFollowerId} = require('../services/follow')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const errorInfo = require('../model/ErrorInfo')
 
@@ -56,7 +56,7 @@ async function unFollow(followerId, ctx) {
  */
 async function getFollowerList(ctx) {
   const { id: userId } = ctx.session.userInfo
-  const result = await getFollowerByUserId(userId)
+  const result = await getFollowerByUserId({userId})
   if (result) {
     return new SuccessModel(result)
   }
@@ -71,12 +71,39 @@ async function getFollowerList(ctx) {
  */
 async function getFansList(pagesize = 10, pageIndex = 0, ctx) {
   const { id: followerId } = ctx.session.userInfo
-  const result = await getFansByFollowerId(pagesize, pageIndex, followerId)
+  const result = await getFansByFollowerId({pagesize, pageIndex, followerId})
   if (result) {
     return new SuccessModel(result)
   }
   return new ErrorModel(errorInfo.getFansByFollowerIdFailInfo)
+}
 
+/**
+ * 根据用户名获取粉丝数量
+ * @param {string} userName 
+ */
+async function getFansCount(userId){
+  const result = await getFansByFollowerId({followerId:userId})
+  if(result){
+    return new SuccessModel({
+      count:result.count
+    })
+  }
+  return new ErrorModel(errorInfo.getFansByFollowerIdFailInfo)
+}
+
+/**
+ * 根据用户名获取关注数量
+ * @param {string} userName 
+ */
+async function getFollowerCount(userId){
+  const result = await getFollowerByUserId({userId:userId})
+  if(result){
+    return new SuccessModel({
+      count:result.count
+    })
+  }
+  return new ErrorModel(errorInfo.addFollowerFailInfo)
 }
 
 module.exports = {
@@ -84,5 +111,7 @@ module.exports = {
   addFollow,
   unFollow,
   getFollowerList,
-  getFansList
+  getFansList,
+  getFansCount,
+  getFollowerCount
 }

@@ -67,7 +67,7 @@ async function deleteFollow(followerId, userId) {
  * 根据userId获取关注人信息
  * @param {number} userId 用户信息
  */
-async function getFollowerByUserId(userId) {
+async function getFollowerByUserId({pagesize, pageIndex, userId}) {
   debugger
   const result = await UserRelation.findAndCountAll({
     where: {
@@ -101,7 +101,7 @@ async function getFollowerByUserId(userId) {
  * @param {number} pageIndex 
  * @param {number} followerId 
  */
-async function getFansByFollowerId(pagesize, pageIndex, followerId) {
+async function getFansByFollowerId({pagesize, pageIndex, followerId}) {
   debugger
   const result = await User.findAndCountAll({
     attributes: ['userName', 'nickname', 'picture', 'id'],

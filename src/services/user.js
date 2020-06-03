@@ -15,6 +15,7 @@ const user = require('../controller/user')
 
 async function getUserInfo(userName, password) {
   // 查询条件
+  debugger
   const whereOpt = {
     userName
   }

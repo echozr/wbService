@@ -31,10 +31,10 @@ async function creatBlog({ content, image, userId, ctx }) {
     }
     const result1 = await BlogUpload.bulkCreate(blogImages)
     if (result1.length > 0) {
-      const imageArr=result1.map(v=>{
+      const imageArr = result1.map(v => {
         return v.dataValues.image
       })
-      Object.assign(blog, { image:imageArr })
+      Object.assign(blog, { image: imageArr })
     }
   } else {
     Object.assign(blog, { image: [] })
@@ -60,6 +60,8 @@ async function getList({ userName, pagesize, pageIndex }) {
   // 拼接查询条件
   const pagesize1 = Number(pagesize)
   const pageIndex1 = Number(pageIndex)
+  console.log(pagesize1)
+  console.log(pageIndex1)
   const whereOpts = {
   }
   if (userName) {
@@ -73,18 +75,18 @@ async function getList({ userName, pagesize, pageIndex }) {
     order: [
       ['id', 'desc']
     ],
-    distinct: true,  //去重
+    distinct: true,  // 去重
     include: [
       {
         model: User,
         attributes: ['userName', 'nickname', 'picture', 'city'],
-        where: whereOpts,
-        required: false,
+        where: whereOpts
+        // required: false,
       },
       {
         model: BlogUpload,
-        attributes: ['image'],
-        required: false,
+        attributes: ['image']
+        // required: false,
       }
     ]
   })
