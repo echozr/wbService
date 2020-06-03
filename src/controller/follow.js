@@ -80,7 +80,7 @@ async function getFansList(pagesize = 10, pageIndex = 0, ctx) {
 
 /**
  * 根据用户名获取粉丝数量
- * @param {string} userName 
+ * @param {number} userId 
  */
 async function getFansCount(userId){
   const result = await getFansByFollowerId({followerId:userId})
@@ -94,7 +94,7 @@ async function getFansCount(userId){
 
 /**
  * 根据用户名获取关注数量
- * @param {string} userName 
+ * @param {number} userId 
  */
 async function getFollowerCount(userId){
   const result = await getFollowerByUserId({userId:userId})

@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { creatBlog, getList } = require('../services/blog')
+const { creatBlog, getList ,getUpload } = require('../services/blog')
 const { getSquareCacheList } = require('../cache/blog')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const errorInfo = require('../model/ErrorInfo')
@@ -73,8 +73,23 @@ async function getBlogSquare(pagesize = 10, pageIndex = 0) {
   }
 }
 
+/**
+ * 根据用户名获取所有微博的图片
+ * @param {string} userName 
+ */
+async function getUploadByUser(userName) {
+  const result = await getUpload(userName)
+  if (result) {
+    console.log(result)
+    return new SuccessModel(result)
+  } else {
+    return new ErrorModel(errorInfo.getBlogListFailInfo)
+  }
+}
+
 module.exports = {
   creatBlogs,
   getBlogList,
-  getBlogSquare
+  getBlogSquare,
+  getUploadByUser
 }

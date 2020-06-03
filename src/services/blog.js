@@ -108,7 +108,43 @@ async function getList({ userName, pagesize, pageIndex }) {
   }
 }
 
+async function getUpload(userName) {
+  const whereOpts = {
+    userName
+  }
+  // 执行查询
+  const result = await Blog.findAndCountAll({
+    distinct: true,  // 去重
+    include: [
+      {
+        model: User,
+        where: whereOpts
+      },
+      {
+        model: BlogUpload,
+        attributes: ['image', 'createdAt']
+      }
+    ]
+  })
+  // 处理返回数据格式
+  const list = result.rows.map(item => item.dataValues.blogUploads)
+  const pictureList = []
+  for (let i in list) {
+    if (list[i].length > 0) {
+      for (let x in list[i]) {
+        pictureList.push(list[i][x])
+      }
+    }
+  }
+  // 返回数据
+  return {
+    list: pictureList
+  }
+
+}
+
 module.exports = {
   creatBlog,
-  getList
+  getList,
+  getUpload
 }

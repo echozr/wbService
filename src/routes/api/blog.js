@@ -5,7 +5,7 @@
 
 const router = require('koa-router')()
 const loginCheck = require('../../middlewares/loginCheck')
-const { creatBlogs, getBlogList,getBlogSquare } = require('../../controller/blog')
+const { creatBlogs, getBlogList, getBlogSquare, getUploadByUser } = require('../../controller/blog')
 const { genValidator } = require('../../middlewares/validate')
 const blogValidate = require('../../validator/blog')
 
@@ -23,7 +23,7 @@ router.post('/getBlogList', loginCheck, async (ctx, next) => {
   debugger
   const { userName, pagesize, pageIndex } = ctx.request.body
   // 调用controller
-  ctx.body = await getBlogList( userName, pagesize, pageIndex)
+  ctx.body = await getBlogList(userName, pagesize, pageIndex)
 })
 
 // 获取微博广场
@@ -32,6 +32,12 @@ router.post('/getBlogSquare', loginCheck, async (ctx, next) => {
   // 调用controller
   debugger
   ctx.body = await getBlogSquare(pagesize, pageIndex)
+})
+
+// 根据用户名获取所有图片
+router.post('/getUploadByUser', loginCheck, async (ctx, next) => {
+  const { userName } = ctx.request.body
+  ctx.body = await getUploadByUser(userName)
 })
 
 module.exports = router
