@@ -67,7 +67,7 @@ async function deleteFollow(followerId, userId) {
  * 根据userId获取关注人信息
  * @param {number} userId 用户信息
  */
-async function getFollowerByUserId({pagesize, pageIndex, userId}) {
+async function getFollowerByUserId({ pagesize, pageIndex, userId }) {
   debugger
   const result = await UserRelation.findAndCountAll({
     where: {
@@ -84,7 +84,6 @@ async function getFollowerByUserId({pagesize, pageIndex, userId}) {
       }
     ]
   })
-  console.log(result)
   const followerList = result.rows.map(v => {
     let user = v.user
     return formatUser(user.dataValues)
@@ -101,7 +100,7 @@ async function getFollowerByUserId({pagesize, pageIndex, userId}) {
  * @param {number} pageIndex 
  * @param {number} followerId 
  */
-async function getFansByFollowerId({pagesize, pageIndex, followerId}) {
+async function getFansByFollowerId({ pagesize, pageIndex, followerId }) {
   debugger
   const result = await User.findAndCountAll({
     attributes: ['userName', 'nickname', 'picture', 'id'],
@@ -115,12 +114,39 @@ async function getFansByFollowerId({pagesize, pageIndex, followerId}) {
       }
     }]
   })
-  const FansList = result.rows.map(v =>formatUser(v.dataValues))
+  const FansList = result.rows.map(v => formatUser(v.dataValues))
   return {
     count: result.count,
     userList: FansList
   }
+}
 
+/**
+ * 根据用户ID获取粉丝数和关注数量
+ * @param {number} userId 
+ */
+async function getFansAndFollowerByUserId(userName) {
+  const fans = await User.findAndCountAll({
+    where: {
+      userName
+    },
+    include: [{
+      model: UserRelation,
+      required: true
+    }]
+  })
+  const follower = await UserRelation.findAndCountAll({
+    include: [{
+      model: User,
+      where: {
+        userName
+      }
+    }]
+  })
+  return {
+    followerCount:follower.count,
+    fansCount:fans.count
+  }
 }
 
 module.exports = {
@@ -128,6 +154,6 @@ module.exports = {
   createFollow,
   deleteFollow,
   getFollowerByUserId,
-  getFansByFollowerId
-
+  getFansByFollowerId,
+  getFansAndFollowerByUserId
 }

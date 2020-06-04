@@ -122,7 +122,7 @@ async function getUpload(userName) {
       },
       {
         model: BlogUpload,
-        attributes: ['image', 'createdAt']
+        attributes: ['image', 'createdAt'],
       }
     ]
   })
@@ -132,7 +132,13 @@ async function getUpload(userName) {
   for (let i in list) {
     if (list[i].length > 0) {
       for (let x in list[i]) {
-        pictureList.push(list[i][x])
+        const Time=new Date(list[i][x].dataValues.createdAt)
+        const month=Time.getMonth() + 1 < 10 ? '0' + (Time.getMonth() + 1): Time.getMonth() + 1
+        const Time1=`${Time.getFullYear()}-${month}` 
+        pictureList.push({
+          time:Time1,
+          image:list[i][x].image
+        })
       }
     }
   }

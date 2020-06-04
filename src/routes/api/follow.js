@@ -5,7 +5,7 @@
 
 const router = require('koa-router')()
 const loginCheck = require('../../middlewares/loginCheck')
-const { isFollow, addFollow, unFollow, getFollowerList, getFansList, getFansCount, getFollowerCount } = require('../../controller/follow')
+const { isFollow, addFollow, unFollow, getFollowerList, getFansList, getFansAndFollowerCount } = require('../../controller/follow')
 
 router.prefix('/follow')
 
@@ -39,16 +39,10 @@ router.post('/getFansList', loginCheck, async (ctx, next) => {
   ctx.body = await getFansList(pagesize, pageIndex, ctx)
 })
 
-// 根据用户名获取粉丝数量
-router.post('/getFansCount', async (ctx, next) => {
-  const { userId } = ctx.request.body
-  ctx.body = await getFansCount(userId)
-})
-
-// 根据用户名获取关注数量
-router.post('/getFollowerCount', async (ctx, next) => {
-  const { userId } = ctx.request.body
-  ctx.body = await getFollowerCount(userId)
+// 根据ID获取关注数及粉丝
+router.post('/getFansAndFollower', async (ctx, next) => {
+  const { userName } = ctx.request.body
+  ctx.body = await getFansAndFollowerCount(userName)
 })
 
 
