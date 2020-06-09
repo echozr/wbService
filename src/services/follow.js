@@ -79,7 +79,7 @@ async function getFollowerByUserId({ pagesize, pageIndex, userId }) {
     include: [
       {
         model: User,
-        attributes: ['userName', 'nickname', 'picture', 'id'],
+        attributes: ['userName', 'nickname', 'picture', 'id' ,'city'],
         required: false,
       }
     ]
@@ -103,7 +103,7 @@ async function getFollowerByUserId({ pagesize, pageIndex, userId }) {
 async function getFansByFollowerId({ pagesize, pageIndex, followerId }) {
   debugger
   const result = await User.findAndCountAll({
-    attributes: ['userName', 'nickname', 'picture', 'id'],
+    attributes: ['userName', 'nickname', 'picture', 'id', 'city'],
     order: [
       ['id', 'desc']
     ],

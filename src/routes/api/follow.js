@@ -11,6 +11,7 @@ router.prefix('/follow')
 
 // 判断当前用户是否关注
 router.post('/isFollow', loginCheck, async (ctx, next) => {
+  debugger
   const { followerId } = ctx.request.body
   // 调用controller
   ctx.body = await isFollow(followerId, ctx)

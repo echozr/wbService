@@ -69,7 +69,7 @@ async function getList({ userName, pagesize, pageIndex }) {
   }
   // 执行查询
   const result = await Blog.findAndCountAll({
-    attributes: ['id', 'content'],
+    attributes: ['id', 'content','createdAt'],
     limit: pagesize1,
     offset: pageIndex1 * pagesize1,
     order: [
