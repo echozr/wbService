@@ -45,13 +45,11 @@ async function creatBlogs({ content, image, ctx }) {
  * @param {number} pageIndex  第几页
  * 
  */
-async function getBlogList(userName, pagesize = 10, pageIndex = 0) {
+async function getBlogList(userName, pagesize = 10, pageIndex = 0,ctx) {
   // 调用services
-  const result = await getList({ userName, pagesize, pageIndex })
-  console.log(result)
+  const result = await getList({ userName, pagesize, pageIndex,ctx })
   debugger
   if (result) {
-    console.log(result)
     return new SuccessModel(result)
   } else {
     return new ErrorModel(errorInfo.getBlogListFailInfo)

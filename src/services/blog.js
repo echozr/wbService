@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { Blog, BlogUpload, User } = require('../db/models/index')
+const { Blog, BlogUpload, User, Praise } = require('../db/models/index')
 const { formatUser } = require('./_format.js')
 /**
  * 创建微博
@@ -56,12 +56,12 @@ async function creatBlog({ content, image, userId, ctx }) {
  * @param {number} pageIndex  页码
  */
 
-async function getList({ userName, pagesize, pageIndex }) {
+async function getList({ userName, pagesize, pageIndex, ctx }) {
+  const { id: userId } = ctx.session.userInfo
+  debugger
   // 拼接查询条件
   const pagesize1 = Number(pagesize)
   const pageIndex1 = Number(pageIndex)
-  console.log(pagesize1)
-  console.log(pageIndex1)
   const whereOpts = {
   }
   if (userName) {
@@ -69,7 +69,7 @@ async function getList({ userName, pagesize, pageIndex }) {
   }
   // 执行查询
   const result = await Blog.findAndCountAll({
-    attributes: ['id', 'content','createdAt'],
+    attributes: ['id', 'content', 'createdAt'],
     limit: pagesize1,
     offset: pageIndex1 * pagesize1,
     order: [
@@ -87,6 +87,9 @@ async function getList({ userName, pagesize, pageIndex }) {
         model: BlogUpload,
         attributes: ['image']
         // required: false,
+      }, {
+        model: Praise,
+        attributes: ['id', 'userId']
       }
     ]
   })
@@ -95,8 +98,12 @@ async function getList({ userName, pagesize, pageIndex }) {
   const list = blogList.map(blogItem => {
     const user = blogItem.user.dataValues
     const blogUploads = blogItem.blogUploads.map(v => v.dataValues.image)
+    const praiseCount = blogItem.praises.length
+    const praisePerson = blogItem.praises.filter(item => item.dataValues.userId === userId)
     blogItem.user = formatUser(user)
     blogItem.blogUploads = blogUploads
+    blogItem.praises = praiseCount
+    blogItem.praisePerson = praisePerson.length > 0?true :false
     return blogItem
   })
   // 返回数据
@@ -132,12 +139,12 @@ async function getUpload(userName) {
   for (let i in list) {
     if (list[i].length > 0) {
       for (let x in list[i]) {
-        const Time=new Date(list[i][x].dataValues.createdAt)
-        const month=Time.getMonth() + 1 < 10 ? '0' + (Time.getMonth() + 1): Time.getMonth() + 1
-        const Time1=`${Time.getFullYear()}-${month}` 
+        const Time = new Date(list[i][x].dataValues.createdAt)
+        const month = Time.getMonth() + 1 < 10 ? '0' + (Time.getMonth() + 1) : Time.getMonth() + 1
+        const Time1 = `${Time.getFullYear()}-${month}`
         pictureList.push({
-          time:Time1,
-          image:list[i][x].image
+          time: Time1,
+          image: list[i][x].image
         })
       }
     }

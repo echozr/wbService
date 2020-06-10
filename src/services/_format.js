@@ -10,7 +10,7 @@ const { DEFAULT_PICTURE } = require('../config/constant')
   * @param {object} obj  用户对象
   */
 const _formatUserPicture = (obj) => {
-  if (obj.picture === null) {
+  if (obj.picture === null || obj.picture === '' ) {
     obj.picture = DEFAULT_PICTURE
   }
   return obj
@@ -21,6 +21,7 @@ const _formatUserPicture = (obj) => {
  * @param {Array|Object} list  用户列表或者单个用户信息
  */
 const formatUser = (list) => {
+  debugger
   if (list === null) {
     return list
   }

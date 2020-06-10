@@ -7,6 +7,7 @@ const User = require('./User')
 const Blog = require('./Blog')
 const BlogUpload = require('./BlogUpload')
 const UserRelation = require('./UserRelation')
+const Praise = require('./Praise')
 
 // 外键关系
 
@@ -17,6 +18,15 @@ Blog.belongsTo(User, {
 
 //博客有多张图片
 Blog.hasMany(BlogUpload, {
+  foreignKey: 'blogId'
+})
+
+// 博客有多个赞
+Praise.belongsTo(User,{
+  foreignKey:'userId'
+})
+
+Blog.hasMany(Praise, {
   foreignKey: 'blogId'
 })
 
@@ -33,5 +43,6 @@ module.exports = {
   User,
   Blog,
   BlogUpload,
-  UserRelation
+  UserRelation,
+  Praise
 }

@@ -23,7 +23,7 @@ router.post('/getBlogList', loginCheck, async (ctx, next) => {
   debugger
   const { userName, pagesize, pageIndex } = ctx.request.body
   // 调用controller
-  ctx.body = await getBlogList(userName, pagesize, pageIndex)
+  ctx.body = await getBlogList(userName, pagesize, pageIndex,ctx)
 })
 
 // 获取微博广场

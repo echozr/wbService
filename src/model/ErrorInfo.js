@@ -104,6 +104,18 @@ const errorInfo = {
   getFansByFollowerIdFailInfo: {
     code: 20003,
     message: '获取粉丝列表失败'
+  },
+  addPraiseFail: {
+    code: 30001,
+    message: '点赞失败，请重试'
+  },
+  unPraiseFail:{
+    code: 30002,
+    message: '取消失败，请重试'
+  },
+  getPraiseFail:{
+    code: 30003,
+    message: '取消点赞信息失败，请重试'
   }
 }
 module.exports = errorInfo
