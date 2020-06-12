@@ -18,6 +18,7 @@ const utilsApi = require('./routes/api/utils')
 const blogApi = require('./routes/api/blog')
 const followApi = require('./routes/api/follow')
 const praiseApi =require('./routes/api/praise')
+const discussApi =require('./routes/api/discuss')
 // error handler
 onerror(app)
 // middlewares 中间件
@@ -73,6 +74,7 @@ app.use(utilsApi.routes(), utilsApi.allowedMethods())
 app.use(blogApi.routes(), blogApi.allowedMethods())
 app.use(followApi.routes(), blogApi.allowedMethods())
 app.use(praiseApi.routes(), praiseApi.allowedMethods())
+app.use(discussApi.routes(),discussApi.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

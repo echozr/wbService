@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { creatBlog, getList ,getUpload } = require('../services/blog')
+const { creatBlog, getList, getUpload, getBlogItem, deleteBlog } = require('../services/blog')
 const { getSquareCacheList } = require('../cache/blog')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const errorInfo = require('../model/ErrorInfo')
@@ -45,9 +45,9 @@ async function creatBlogs({ content, image, ctx }) {
  * @param {number} pageIndex  第几页
  * 
  */
-async function getBlogList(userName, pagesize = 10, pageIndex = 0,ctx) {
+async function getBlogList(userName, pagesize = 10, pageIndex = 0, ctx) {
   // 调用services
-  const result = await getList({ userName, pagesize, pageIndex,ctx })
+  const result = await getList({ userName, pagesize, pageIndex, ctx })
   debugger
   if (result) {
     return new SuccessModel(result)
@@ -85,9 +85,41 @@ async function getUploadByUser(userName) {
   }
 }
 
+
+/**
+ * 通过blogId获取博客详情
+ * @param {number} blogId 
+ */
+async function getBlogInfo(blogId, ctx) {
+  const result = await getBlogItem(blogId, ctx)
+  if (result) {
+    console.log(result)
+    return new SuccessModel(result)
+  } else {
+    return new ErrorModel(errorInfo.getBlogListFailInfo)
+  }
+}
+
+/**
+ * 删除微博
+ * @param {number} blogId 
+ * @param {object} ctx 
+ */
+async function deleteBlogs(blogId, ctx) {
+  const { id: userId } = ctx.session.userInfo
+  const result = await deleteBlog(blogId, userId)
+  if(result){
+    return new SuccessModel(result)
+  }else{
+    return new ErrorModel(errorInfo.delBlogFail)
+  }
+}
+
 module.exports = {
   creatBlogs,
   getBlogList,
   getBlogSquare,
-  getUploadByUser
+  getUploadByUser,
+  getBlogInfo,
+  deleteBlogs
 }

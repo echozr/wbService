@@ -88,6 +88,11 @@ const errorInfo = {
     code: 13002,
     message: '微博内容不能为空'
   },
+  // 删除博客失败
+  delBlogFail:{
+    code: 20000,
+    message: '删除微博失败'
+  },
   // 是否是关注关系
   isFollowFailInfo: {
     code: 20001,
@@ -116,6 +121,18 @@ const errorInfo = {
   getPraiseFail:{
     code: 30003,
     message: '取消点赞信息失败，请重试'
+  },
+  createDiscussFail:{
+    code: 40001,
+    message: '创建留言失败，请重试'
+  },
+  getDiscussFail:{
+    code: 40002,
+    message: '获取回复信息失败'
+  },
+  deleteDiscussFail:{
+    code: 40003,
+    message: '删除评论失败'
   }
 }
 module.exports = errorInfo

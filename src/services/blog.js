@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { Blog, BlogUpload, User, Praise } = require('../db/models/index')
+const { Blog, BlogUpload, User, Praise, UserRelation } = require('../db/models/index')
 const { formatUser } = require('./_format.js')
 /**
  * 创建微博
@@ -87,7 +87,8 @@ async function getList({ userName, pagesize, pageIndex, ctx }) {
         model: BlogUpload,
         attributes: ['image']
         // required: false,
-      }, {
+      },
+      {
         model: Praise,
         attributes: ['id', 'userId']
       }
@@ -103,7 +104,7 @@ async function getList({ userName, pagesize, pageIndex, ctx }) {
     blogItem.user = formatUser(user)
     blogItem.blogUploads = blogUploads
     blogItem.praises = praiseCount
-    blogItem.praisePerson = praisePerson.length > 0?true :false
+    blogItem.praisePerson = praisePerson.length > 0 ? true : false
     return blogItem
   })
   // 返回数据
@@ -153,11 +154,75 @@ async function getUpload(userName) {
   return {
     list: pictureList
   }
+}
+
+/**
+ * 通过ID 获取详情
+ * @param {number} blogId 
+ */
+async function getBlogItem(blogId, ctx) {
+  const { id: userId } = ctx.session.userInfo
+  debugger
+  const result = await Blog.findAndCountAll({
+    where: {
+      id: blogId
+    },
+    attributes: ['content', 'id', 'createdAt'],
+    include: [
+      {
+        model: User,
+        attributes: ['userName', 'nickname', 'picture', 'city', 'id']
+      },
+      {
+        model: BlogUpload,
+        attributes: ['image']
+        // required: false,
+      },
+      {
+        model: Praise,
+        attributes: ['id', 'userId']
+      }
+    ]
+  })
+  console.log(result)
+  const blogList = result.rows.map(item => {
+    const blogItem = item.dataValues
+    const user = blogItem.user.dataValues
+    const blogUploads = blogItem.blogUploads.map(v => v.dataValues.image)
+    const praiseCount = blogItem.praises.length
+    const praisePerson = blogItem.praises.filter(item => item.dataValues.userId === userId)
+    blogItem.user = formatUser(user)
+    blogItem.blogUploads = blogUploads
+    blogItem.praises = praiseCount
+    blogItem.praisePerson = praisePerson.length > 0 ? true : false
+    return blogItem
+  })
+  return blogList[0]
 
 }
+
+
+/**
+ * 根据博客Id 删除博客
+ * @param {*} blogId 
+ * @param {*} userId 
+ */
+async function deleteBlog(blogId, userId) {
+  const whereOpt = {
+    id: blogId,
+    userId
+  }
+  const result = await Blog.destroy({
+    where: whereOpt
+  })
+  return (result)
+}
+
 
 module.exports = {
   creatBlog,
   getList,
-  getUpload
+  getUpload,
+  getBlogItem,
+  deleteBlog
 }

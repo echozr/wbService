@@ -8,6 +8,7 @@ const Blog = require('./Blog')
 const BlogUpload = require('./BlogUpload')
 const UserRelation = require('./UserRelation')
 const Praise = require('./Praise')
+const Discuss =require('./discuss')
 
 // 外键关系
 
@@ -39,10 +40,20 @@ User.hasMany(UserRelation, {
   foreignKey: 'userId'
 })
 
+
+Blog.hasMany(Discuss,{
+  foreignKey:'blogId'
+})
+
+Discuss.belongsTo(User,{
+  foreignKey:'userId'
+})
+
 module.exports = {
   User,
   Blog,
   BlogUpload,
   UserRelation,
-  Praise
+  Praise,
+  Discuss
 }
