@@ -37,7 +37,7 @@ async function getDiscussByBlogId(blogId) {
     where: {
       blogId
     },
-    attributes: ['id', 'userId', 'blogId', 'parentId'],
+    attributes: ['id', 'userId', 'blogId', 'parentId', 'content', 'createdAt'],
     order: [
       ['id', 'desc']
     ],
@@ -68,15 +68,36 @@ async function getDiscussByBlogId(blogId) {
  * @param {*} parentId 
  * @param {*} userId 
  */
-async function deleteDiscuss(discussId ,userId) {
+async function deleteDiscuss(discussId, userId) {
   const whereOpt = {
-  
-    [Sequelize.Op.or]: [
-      { parentId: -1  },
-      { parentId: discussId },
-      {id: discussId},
-      {userId:userId}
-    ]
+    userId,
+    parentId: -1,
+    id: discussId
+  }
+  const whereOpt1 = {
+    userId,
+    parentId: discussId,
+  }
+
+  const result = await Discuss.destroy({
+    where: {
+      [Sequelize.Op.or]: [
+        whereOpt, whereOpt1
+      ]
+    }
+  })
+  return (result)
+}
+
+/**
+ * 删除单条子评论
+ * @param {number} userId session 中获取的用户ID 
+ * @param {number} id 评论ID
+ */
+async function deleteSonDiscuss(discussId, userId) {
+  const whereOpt = {
+    userId,
+    id: discussId
   }
   const result = await Discuss.destroy({
     where: whereOpt
@@ -84,9 +105,52 @@ async function deleteDiscuss(discussId ,userId) {
   return (result)
 }
 
+/**
+ * 根据评论Id  获取相关评论及子评论
+ * @param {number} discussId 
+ */
+async function findAllDiscussById(discussId) {
+  debugger
+  const result = await Discuss.findAndCountAll({
+    where: {
+      [Sequelize.Op.or]: [
+        {
+          id: discussId
+        }, 
+        {
+          parentId: discussId
+        }
+      ],
+    },
+    attributes: ['id', 'userId', 'blogId', 'parentId', 'content', 'createdAt'],
+    order: [
+      ['id', 'desc']
+    ],
+    include: [
+      {
+        model: User,
+        attributes: ['userName', 'nickname', 'picture'],
+      }
+    ]
+  })
+  // 数据结构处理
+  const allList = result.rows.map(v => v.dataValues)
+  const parentList = allList.filter(v => v.parentId === -1)
+  const list = parentList.map(item => {
+    const children = allList.filter(x => x.parentId === item.id)
+    item.children = children
+    return item
+  })
+  return {
+    count: result.count,
+    list,
+  }
+}
 
 module.exports = {
   createDiscuss,
   getDiscussByBlogId,
-  deleteDiscuss
+  deleteDiscuss,
+  deleteSonDiscuss,
+  findAllDiscussById
 }

@@ -133,6 +133,10 @@ const errorInfo = {
   deleteDiscussFail:{
     code: 40003,
     message: '删除评论失败'
+  },
+  getDiscussListByIdFail:{
+    code: 40004,
+    message: '获取子评论列表失败'
   }
 }
 module.exports = errorInfo

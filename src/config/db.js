@@ -11,7 +11,7 @@ let RedisConfig = {
 
 //mysql 配置
 let mysqlConfig = {
-  host: '192.168.1.197',
+  host: 'lvchuang.f3322.net',
   port: '3306',
   dialect: 'mysql',
   user: 'root',

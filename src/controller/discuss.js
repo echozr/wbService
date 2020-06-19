@@ -5,7 +5,8 @@
 
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const errorInfo = require('../model/ErrorInfo')
-const { createDiscuss, getDiscussByBlogId ,deleteDiscuss } = require('../services/discuss')
+const { createDiscuss, getDiscussByBlogId ,deleteDiscuss, deleteSonDiscuss,findAllDiscussById } = require('../services/discuss')
+const user = require('../db/models/User')
 
 
 /**
@@ -20,7 +21,6 @@ async function addDiscuss({ blogId, parentId, content, ctx }) {
   try {
     const result = await createDiscuss({ blogId, parentId, content, userId })
     return new SuccessModel(result)
-
   } catch (error) {
     console.log(error)
     return new ErrorModel(errorInfo.createDiscussFail)
@@ -48,13 +48,43 @@ async function unDiscuss(discussId,ctx) {
   const { id: userId } = ctx.session.userInfo
   const result=await deleteDiscuss(discussId,userId)
   if(result){
-    return new SuccessModel('删除成功')
+    return new SuccessModel()
   }
   return new ErrorModel(errorInfo.deleteDiscussFail)
 }
 
+/**
+ * 根据评论ID 删除一条子评论
+ * @param {number} discussId 
+ * @param {object} ctx 
+ */
+async function deleteOne(discussId, ctx) {
+  const {id:userId}= ctx.session.userInfo
+  const result = await deleteSonDiscuss(discussId,userId)
+  if(result){
+    return new SuccessModel()
+  }
+  return new ErrorModel(errorInfo.deleteDiscussFail)
+}
+
+/**
+ * 通过评论ID 获取子评论
+ * @param {number} discussId 
+ */
+async function getDiscussListById(discussId){
+  const result = await findAllDiscussById(discussId)
+  if(result){
+    return new SuccessModel(result)
+  }
+  return new ErrorModel(errorInfo.getDiscussListByIdFail)
+}
+
+
+
 module.exports = {
   addDiscuss,
   getDiscuss,
-  unDiscuss
+  unDiscuss,
+  deleteOne,
+  getDiscussListById
 }

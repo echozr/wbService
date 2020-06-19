@@ -3,7 +3,7 @@
  * @author zr
  */
 
-const { Blog, BlogUpload, User, Praise, UserRelation } = require('../db/models/index')
+const { Blog, BlogUpload, User, Praise, Discuss } = require('../db/models/index')
 const { formatUser } = require('./_format.js')
 /**
  * 创建微博
@@ -91,6 +91,10 @@ async function getList({ userName, pagesize, pageIndex, ctx }) {
       {
         model: Praise,
         attributes: ['id', 'userId']
+      },
+      {
+        model: Discuss,
+        attributes: ['id', 'userId']
       }
     ]
   })
@@ -104,6 +108,7 @@ async function getList({ userName, pagesize, pageIndex, ctx }) {
     blogItem.user = formatUser(user)
     blogItem.blogUploads = blogUploads
     blogItem.praises = praiseCount
+    blogItem.discusses=blogItem.discusses.length
     blogItem.praisePerson = praisePerson.length > 0 ? true : false
     return blogItem
   })
