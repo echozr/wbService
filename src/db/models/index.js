@@ -8,7 +8,8 @@ const Blog = require('./Blog')
 const BlogUpload = require('./BlogUpload')
 const UserRelation = require('./UserRelation')
 const Praise = require('./Praise')
-const Discuss =require('./discuss')
+const Discuss = require('./discuss')
+const AtRelation = require('./atRelation')
 
 // 外键关系
 
@@ -23,8 +24,8 @@ Blog.hasMany(BlogUpload, {
 })
 
 // 博客有多个赞
-Praise.belongsTo(User,{
-  foreignKey:'userId'
+Praise.belongsTo(User, {
+  foreignKey: 'userId'
 })
 
 Blog.hasMany(Praise, {
@@ -41,19 +42,31 @@ User.hasMany(UserRelation, {
 })
 
 
-Blog.hasMany(Discuss,{
-  foreignKey:'blogId'
+Blog.hasMany(Discuss, {
+  foreignKey: 'blogId'
 })
 
-Discuss.belongsTo(User,{
-  foreignKey:'userId'
+Discuss.belongsTo(User, {
+  foreignKey: 'userId'
 })
 
+Blog.hasMany(AtRelation, {
+  foreignKey: 'blogId'
+})
+
+AtRelation.belongsTo(Blog, {
+  foreignKey: 'blogId'
+})
+
+AtRelation.belongsTo(Discuss, {
+  foreignKey: 'discussId'
+})
 module.exports = {
   User,
   Blog,
   BlogUpload,
   UserRelation,
   Praise,
-  Discuss
+  Discuss,
+  AtRelation
 }

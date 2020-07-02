@@ -4,7 +4,10 @@
  */
 
 const { Blog, BlogUpload, User, Praise, Discuss } = require('../db/models/index')
+const { getUserInfo } = require('./user')
+const { createAtRelation } = require('./atRelation')
 const { formatUser } = require('./_format.js')
+const { REG_FOR_AT_WHO } = require('../config/constant')
 /**
  * 创建微博
  * @param {string} content 微博内容
@@ -13,11 +16,30 @@ const { formatUser } = require('./_format.js')
  */
 
 async function creatBlog({ content, image, userId, ctx }) {
+  // 从创建微博中获取@的userName相关信息
+  debugger
+  const userNameArr = []
+  content = content.replace(REG_FOR_AT_WHO, (matchStr, nickName, userName) => {
+    userNameArr.push(userName)
+    return matchStr
+  })
+  // 根据用户名获取用户信息
+  const userList = await Promise.all(
+    userNameArr.map(v => getUserInfo(v))
+  )
+  // 根据用户信息获取 userId 数组
+  const userIdArr = userList.map(v => v.id)
+
   // 插入微博
   const result = await Blog.create({
     content,
     userId
   })
+
+  // 创建@relation 关系
+  const result1 = await Promise.all(userIdArr.map(userId => createAtRelation({ blogId: result.id, userId, type: 'blog' })))
+  console.log(result1)
+
   const blog = result.dataValues
   // 插入微博图片
   if (image.length > 0) {
@@ -108,7 +130,7 @@ async function getList({ userName, pagesize, pageIndex, ctx }) {
     blogItem.user = formatUser(user)
     blogItem.blogUploads = blogUploads
     blogItem.praises = praiseCount
-    blogItem.discusses=blogItem.discusses.length
+    blogItem.discusses = blogItem.discusses.length
     blogItem.praisePerson = praisePerson.length > 0 ? true : false
     return blogItem
   })

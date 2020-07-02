@@ -3,9 +3,12 @@
  * @author zr
  */
 
-const { Blog, BlogUpload, User, Praise, UserRelation, Discuss } = require('../db/models/index')
+const { User, Discuss } = require('../db/models/index')
 const { formatUser } = require('./_format.js')
 const Sequelize = require('sequelize')
+const { createAtRelation } = require('./atRelation')
+const { getUserInfo } = require('./user')
+const { REG_FOR_AT_WHO } = require('../config/constant')
 
 /**
  * 添加评论
@@ -15,6 +18,19 @@ const Sequelize = require('sequelize')
  * @param {number} userId  用户Id
  */
 async function createDiscuss({ blogId, parentId, content, userId }) {
+  // 从评论中获取@的userName相关信息
+  const userNameArr = []
+  content = content.replace(REG_FOR_AT_WHO, (matchStr, nickName, userName) => {
+    userNameArr.push(userName)
+    return matchStr
+  })
+  // 根据用户名获取用户信息
+  const userList = await Promise.all(
+    userNameArr.map(v => getUserInfo(v))
+  )
+  // 根据用户信息获取 userId 数组
+  const userIdArr = userList.map(v => v.id)
+
   // 创建评论
   debugger
   const result = await Discuss.create({
@@ -23,6 +39,10 @@ async function createDiscuss({ blogId, parentId, content, userId }) {
     blogId,
     parentId
   })
+
+  // 创建@relation 关系
+  const result1 = await Promise.all(userIdArr.map(userId => createAtRelation({ discussId: result.id, userId, type: 'discuss', blogId })))
+  console.log(result1)
   console.log(result)
   return result.dataValues
 }
@@ -32,7 +52,6 @@ async function createDiscuss({ blogId, parentId, content, userId }) {
  * @param {number} blogId 
  */
 async function getDiscussByBlogId(blogId) {
-  debugger
   const result = await Discuss.findAndCountAll({
     where: {
       blogId
@@ -116,7 +135,7 @@ async function findAllDiscussById(discussId) {
       [Sequelize.Op.or]: [
         {
           id: discussId
-        }, 
+        },
         {
           parentId: discussId
         }

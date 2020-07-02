@@ -89,7 +89,7 @@ const errorInfo = {
     message: '微博内容不能为空'
   },
   // 删除博客失败
-  delBlogFail:{
+  delBlogFail: {
     code: 20000,
     message: '删除微博失败'
   },
@@ -114,29 +114,41 @@ const errorInfo = {
     code: 30001,
     message: '点赞失败，请重试'
   },
-  unPraiseFail:{
+  unPraiseFail: {
     code: 30002,
     message: '取消失败，请重试'
   },
-  getPraiseFail:{
+  getPraiseFail: {
     code: 30003,
     message: '取消点赞信息失败，请重试'
   },
-  createDiscussFail:{
+  createDiscussFail: {
     code: 40001,
     message: '创建留言失败，请重试'
   },
-  getDiscussFail:{
+  getDiscussFail: {
     code: 40002,
     message: '获取回复信息失败'
   },
-  deleteDiscussFail:{
+  deleteDiscussFail: {
     code: 40003,
     message: '删除评论失败'
   },
-  getDiscussListByIdFail:{
+  getDiscussListByIdFail: {
     code: 40004,
     message: '获取子评论列表失败'
+  },
+  getAllAtCountFail: {
+    code: 50001,
+    message: '获取@数量失败'
+  },
+  getAtBlogListFail: {
+    code: 50002,
+    message: '获取@博客列表失败'
+  }, 
+  getAtDiscussListFail: {
+    code: 50003,
+    message: '获取@评论列表失败'
   }
 }
 module.exports = errorInfo
