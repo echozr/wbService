@@ -58,7 +58,7 @@ AtRelation.belongsTo(Blog, {
   foreignKey: 'blogId'
 })
 
-AtRelation.belongsTo(Discuss, {
+Discuss.hasMany(AtRelation, {
   foreignKey: 'discussId'
 })
 module.exports = {

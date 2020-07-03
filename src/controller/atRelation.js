@@ -31,6 +31,9 @@ async function changeReadStatus(ctx, blogId, discussId) {
   const { id: userId } = ctx.session.userInfo
   const result = await changeIsReadTrue(userId,blogId,discussId)
   console.log(result)
+  if(result){
+    return new SuccessModel(result)
+  }
   // 此处不用处理成功 失败逻辑
 }
 

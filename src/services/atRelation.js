@@ -65,8 +65,8 @@ async function changeIsReadTrue(userId, blogId, discussId) {
   }
   if (discussId) {
     Object.assign(whereOpt, { discussId })
-  }else{
-    Object.assign(whereOpt, { discussId:null })
+  } else {
+    Object.assign(whereOpt, { discussId: null })
   }
   // 执行更新方法
   const result = await AtRelation.update(changeData, {
@@ -144,41 +144,41 @@ async function getNotReadBlogList(userId) {
  */
 async function getNotReadDiscussList(userId) {
   debugger
-  const result = await AtRelation.findAndCountAll({
-    where: {
-      userId,
-      isRead: false,
-      type: 'discuss'
-    },
-    attributes: ['userId', 'blogId','discussId'],
+  const result = await Discuss.findAndCountAll({
+
+    attributes: ['createdAt', 'content'],
     order: [
       ['id', 'desc']
     ],
     distinct: true,
     include: [
       {
-        model: Discuss,
-        attributes: ['createdAt', 'content'],
+        model: AtRelation,
+        attributes: ['userId', 'blogId', 'discussId'],
+        where: {
+          userId,
+          isRead: false,
+          type: 'discuss'
+        },
         include:[
           {
-            model:User,
-            attributes: ['userName', 'nickname', 'picture'],
+            model: Blog,
+            attributes: ['content'],
+            include: [
+              {
+                model: User,
+                attributes: ['userName', 'nickname', 'picture'],
+              }
+            ]
           }
         ]
       },
       {
-        model:Blog,
-        attributes: ['content'],
-        include:[
-          {
-            model:User,
-            attributes: ['userName', 'nickname', 'picture'],
-          }
-        ]
-      }
+        model: User,
+        attributes: ['userName', 'nickname', 'picture'],
+      },
     ]
   })
-  debugger
   console.log(result)
   return result
 
